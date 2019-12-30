@@ -57,4 +57,3 @@ def decrease_sort(array: list) -> list:
             j -= 1
         array.insert(j, array.pop(i))
     return array
-
