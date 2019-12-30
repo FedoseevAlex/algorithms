@@ -3,7 +3,7 @@
 from unittest import TestCase
 from random import shuffle
 
-from insert_sorting import increase_sort, decrease_sort
+from algorithms.insert_sorting import increase_sort, decrease_sort
 
 
 class InsertionSortTest(TestCase):
