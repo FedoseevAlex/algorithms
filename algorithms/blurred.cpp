@@ -22,7 +22,7 @@ int main(void){
     non_blurred.push_back(extract_numbers(raw_nums, 2));
   }
 
-  std::cout << "answer: " << picture(non_blurred) << std::endl;
+  std::cout << picture(non_blurred) << std::endl;
 
   return EXIT_SUCCESS;
 }
@@ -57,20 +57,21 @@ int picture(std::vector<std::vector<long>> ranges){
 
   int result = 0;
   for(int i = 0; i < (int) ranges.size(); i++){
-    int *row = array[i];
-
-    for(long j = ranges[i][0]; j < ranges[i][1]; j++){
+    for(long j = ranges[i][0]; j <= ranges[i][1]; j++){
       int upper = 0, diag = 0, left = 0;
+      array[i][j] = 1;
 
       if(i - 1 >= 0 && j - 1 >= 0){
         diag = array[i - 1][j - 1];
-        upper = array[i - 1][j];
-        left = array[i][j - 1];
+        upper = array[i][j - 1];
+        left = array[i - 1][j];
       } else if(i - 1 >= 0) {
         upper = array[i - 1][j];
-      } else {
+      } else if(j - 1 >= 0) {
+        left = array[i][j - 1];
       }
-      result = result > row[j] ? result: row[j];
+      array[i][j] += std::min({diag, upper, left});
+      result = std::max({result, array[i][j]});
     }
   }
 
