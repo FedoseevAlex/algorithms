@@ -52,7 +52,7 @@ std::vector<long> extract_numbers(std::string str, int nums_count){
 int picture(std::vector<std::vector<long>> ranges){
   int **array = new int*[ranges.size()];
   for(unsigned long i = 0; i < ranges.size(); i++){
-    array[i] = new int[ranges.size()]{};
+    array[i] = new int[ranges.size()]{0};
   }
 
   int result = 0;
