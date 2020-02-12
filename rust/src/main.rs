@@ -1,4 +1,3 @@
-use std::dbg;
 use std::io;
 
 fn main() {
@@ -7,13 +6,12 @@ fn main() {
         .read_line(&mut input)
         .expect("Unable to read from 'stdin'!");
 
-    let size: u16 = input
+    let size: u32 = input
         .trim()
         .parse()
-        .expect("Error during conversion to u16");
-    dbg!(size);
+        .expect("Error during conversion to u32");
 
-    let mut ranges: Vec<(u16, u16)> = Vec::new();
+    let mut ranges: Vec<(usize, usize)> = Vec::new();
     for _ in 0..size {
         let mut input: String = String::new();
         io::stdin()
@@ -22,22 +20,55 @@ fn main() {
 
         let range = parse_to_pair(input);
         ranges.push(range);
-        dbg!(range);
     }
+    println!("{}", get_max_pixels(&ranges));
+}
+
+/// Function to get maximum square of non-blurred pixels
+fn get_max_pixels(ranges: &Vec<(usize, usize)>) -> u32 {
+    let mut result: u32 = 0;
+
+    let mut previous: Vec<u32> = vec![0; ranges.len()];
+    let (prev_start, prev_end): (usize, usize) = ranges[0];
+    for idx in prev_start..(prev_end + 1) {
+        previous[idx] = 1;
+    }
+
+    for i in 1..ranges.len() {
+        let mut current: Vec<u32> = vec![0; ranges.len()];
+        let (range_start, range_end): (usize, usize) = ranges[i];
+        current[range_start] = 1;
+
+        for j in (range_start + 1)..(range_end + 1) {
+            let up: u32 = previous[j];
+            let left: u32 = *current.get(j - 1).unwrap_or(&(0 as u32));
+            let diag: u32 = *previous.get(j - 1).unwrap_or(&(0 as u32));
+
+            match vec![left, up, diag].iter().min() {
+                Some(min_value) => {
+                    current[j] = *min_value + 1;
+                    result = std::cmp::max(result, current[j])
+                }
+                None => {}
+            }
+        }
+        previous = current;
+    }
+    result
 }
 
 /// Parse strings like "1 3\n" to tuple (1, 3)
 /// Panic if any conversion failed.
-fn parse_to_pair(string: String) -> (u16, u16) {
+fn parse_to_pair(string: String) -> (usize, usize) {
     let parts: Vec<&str> = string.split(' ').collect();
-    let range: (u16, u16) = (
-        dbg!(parts[0])
+    let range: (usize, usize) = (
+        parts[0]
             .trim()
-            .parse::<u16>()
+            .parse::<usize>()
             .expect("Error during first conversion"),
-        dbg!(parts[1])
+        parts[1]
             .trim()
-            .parse::<u16>()
+            .parse::<usize>()
             .expect("Error during second conversion"),
     );
     range
