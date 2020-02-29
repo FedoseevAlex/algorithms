@@ -1,51 +1,61 @@
 from collections import Counter
+import heapq
+from pprint import pprint
 
 
 class Node:
-    def __init__(self, left, right):
-        self.left = left
-        self.right = right
+    def __init__(self):
+        self.left = None
+        self.right = None
 
+    @property
     def weight(self):
-        left_weight = self.left.weight() if self.left is not None else 0
-        right_weight = self.right.weight() if self.right is not None else 0
+        if isinstance(self.left, tuple):
+            left_weight = self.left[0]
+        else:
+            left_weight = self.left.weight() if self.left is not None else 0
+
+        if isinstance(self.right, tuple):
+            right_weight = self.right[0]
+        else:
+            right_weight = self.right.weight() if self.right is not None else 0
+
         return left_weight + right_weight
 
-    def __repr__(self):
-        return f"Node ({repr(self.left)} {repr(self.right)})"
+    def __lt__(self, _):
+        return True
+
+    __gt__ = __lt__
 
 
-class Leaf:
-    def __init__(self, letter, frequency):
-        self.letter = letter
-        self.frequency = frequency
-
-    def weight(self):
-        return self.frequency
-
-    def __repr__(self):
-        return f"Leaf <{repr(self.letter)}, {repr(self.frequency)}>"
-
-
-def build_tree(counter):
-    sorted_counter = sorted(counter.items(), key=lambda kv: kv[1])
-    print(sorted_counter)
-
-    left = Leaf(*sorted_counter[0])
-    root = Node(left, None)
-
-    for index in range(1, len(sorted_counter) - 1):
-        next_leaf = Leaf(*sorted_counter[index + 1])
-        root.right = Leaf(*sorted_counter[index])
-        if root.weight() < next_leaf.weight():
-            new_root = Node(root, next_leaf)
-        else:
-            new_root = Node(next_leaf, root)
-
-        root = new_root
-    print(repr(root))
+def build_tree(input_string: str):
+    counter = [(weight, letter) for letter, weight in Counter(input_string).items()]
+    heapq.heapify(counter)
+    while len(counter) >= 2:
+        root = Node()
+        root.right, root.left = heapq.heappop(counter), heapq.heappop(counter)
+        print(root.left, root.right)
+        heapq.heappush(counter, (root.weight, root))
+    return counter[0]
 
 
-if __name__ == '__main__':
+def make_code(struct, prefix=""):
+    answer = []
+    _, tree = struct
+    print(f"in make_code | prefix '{prefix}'")
+    if isinstance(tree, str):
+        answer.append((tree, prefix))
+    elif isinstance(tree, Node):
+        answer.extend(make_code(tree.left, prefix + '0'))
+        answer.extend(make_code(tree.right, prefix + '1'))
+
+    return answer
+
+def translate(codes, input_string):
+    pass
+
+
+if __name__ == "__main__":
     inp = "abacabad"
-    build_tree(Counter(inp))
+    tree = build_tree(inp)
+    pprint(make_code(tree))
