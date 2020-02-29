@@ -1,6 +1,5 @@
 from collections import Counter
 import heapq
-from pprint import pprint
 
 
 class Node:
@@ -34,7 +33,6 @@ def build_tree(input_string: str):
     while len(counter) >= 2:
         root = Node()
         root.right, root.left = heapq.heappop(counter), heapq.heappop(counter)
-        print(root.left, root.right)
         heapq.heappush(counter, (root.weight, root))
     return counter[0]
 
@@ -42,7 +40,7 @@ def build_tree(input_string: str):
 def make_code(struct, prefix=""):
     answer = []
     _, tree = struct
-    print(f"in make_code | prefix '{prefix}'")
+
     if isinstance(tree, str):
         answer.append((tree, prefix))
     elif isinstance(tree, Node):
@@ -51,11 +49,22 @@ def make_code(struct, prefix=""):
 
     return answer
 
-def translate(codes, input_string):
-    pass
+
+def prepare_answer(input_string):
+    answer = list()
+    tree = build_tree(input_string)
+    codes = dict(make_code(tree))
+    letters_num = len(codes)
+    coded_sequence = [codes[letter] for letter in input_string]
+    coded_string = ''.join(coded_sequence)
+    answer.append(f'{letters_num} {len(coded_string)}')
+    answer.append(coded_string)
+    for letter, code in codes.items():
+        answer.append(f"{letter}: {code}")
+
+    return '\n'.join(answer)
 
 
 if __name__ == "__main__":
-    inp = "abacabad"
-    tree = build_tree(inp)
-    pprint(make_code(tree))
+    inp = input()
+    print(prepare_answer(inp))
