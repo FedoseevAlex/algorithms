@@ -99,9 +99,9 @@ def prepare_answer(input_string: str) -> str:
     coded_sequence = [codes[letter] for letter in input_string]
     coded_string = "".join(coded_sequence)
     answer.append(f"{letters_num} {len(coded_string)}")
-    answer.append(coded_string)
     for letter, code in codes.items():
         answer.append(f"{letter}: {code}")
+    answer.append(coded_string)
 
     return "\n".join(answer)
 
