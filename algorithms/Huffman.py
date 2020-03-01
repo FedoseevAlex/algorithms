@@ -42,16 +42,20 @@ def build_tree(input_string: str) -> Node:
     :param input_string: Входная строка для которой строится дерево
     :return: Корень дерева частот
     """
-    counter = sorted(Counter(input_string).items(), key=lambda x: x[1])
+    counter = sorted(Counter(input_string).items(),
+                     key=lambda x: x[1])
 
     # В цикле происходит жадный шаг алгоритма.
     # На каждой итерации в дерево будут объединены символы
     # c наименьшей частотой. Шаги будем продолжать до тех пор
     # пока в массиве не останется только корень дерева.
-    while len(counter) >= 2:
+    while True:
         root = Node()
-        root.left, root.right = counter.pop(0), counter.pop(0)
+        root.left = counter.pop(0)
+        root.right = counter.pop(0) if counter else None
         counter.append((root, root.weight))
+        if len(counter) == 1:
+            break
         counter.sort(key=lambda x: x[1])
     return counter[0]
 
@@ -73,9 +77,10 @@ def make_code(struct, prefix: str = "") -> list:
     if isinstance(tree, str):
         answer.append((tree, prefix))
     elif isinstance(tree, Node):
-        answer.extend(make_code(tree.left, prefix + "0"))
-        answer.extend(make_code(tree.right, prefix + "1"))
-
+        if tree.left is not None:
+            answer.extend(make_code(tree.left, prefix + "0"))
+        if tree.right is not None:
+            answer.extend(make_code(tree.right, prefix + "1"))
     return answer
 
 
