@@ -4,14 +4,14 @@ from typing import List
 def sift_up(heap: List, pos: int = None):
     if pos is None:
         pos = len(heap) - 1
-    current, parent = pos, pos // 2
+    current, parent = pos, (pos - 1) // 2
 
     while current > 0:
         if heap[current] > heap[parent]:
             heap[current], heap[parent] = heap[parent], heap[current]
         else:
             break
-        current, parent = parent, parent // 2
+        current, parent = parent, (parent - 1) // 2
 
 
 def sift_down(heap: List, pos: int = 0):
@@ -37,16 +37,27 @@ def insert(heap: List, number: int):
 
 
 def heapify(array: List):
-    for idx in range(len(array), 1, -1):
+    for idx in range(len(array), -1, -1):
         sift_down(array, idx)
 
 
 def pop(heap: List):
-    root = heap.pop(0)
+    root = heap[0]
     if heap:
-        heap.insert(0, heap.pop())
+        heap[0] = heap[-1]
+        heap.pop()
         sift_down(heap)
     return root
+
+
+def make_answer(ops):
+    heap = list()
+    for op in ops:
+        op = op.split()
+        if len(op) > 1:
+            insert(heap, int(op[1]))
+        else:
+            yield(pop(heap))
 
 
 if __name__ == "__main__":
