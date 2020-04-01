@@ -3,20 +3,20 @@ import pytest
 from algorithms import heap
 
 testdata = [
-    list(range(5)),
-    list(range(15)),
-    list(range(50)),
-    list(range(150)),
-    list(range(1000)),
-    list(range(100000)),
+    range(5, 1, -1),
+    range(15, 1, -1),
+    range(50, 1, -1),
+    range(150, 1, -1),
+    range(1000, 1, -1),
+    range(100000, 1, -1),
 ]
 
 
+@pytest.mark.timeout(15)
 @pytest.mark.parametrize("numbers", testdata)
 def test_simple(numbers):
-    heap_arr = numbers.copy()
+    heap_arr = list(numbers)
     heap.heapify(heap_arr)
 
-    for idx, elem in enumerate(reversed(numbers), start=1):
-        print(heap_arr)
+    for idx, elem in enumerate(numbers, start=1):
         assert elem == heap.pop(heap_arr), f"Broke at {idx}/{len(numbers)} elements"

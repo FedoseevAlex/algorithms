@@ -15,19 +15,20 @@ def sift_up(heap: List, pos: int = None):
 
 
 def sift_down(heap: List, pos: int = 0):
-    left = pos * 2 + 1
-    right = pos * 2 + 2
-    if right < len(heap):
-        max_child = left if heap[left] > heap[right] else right
-    elif left < len(heap):
-        max_child = left
-    else:
-        return
+    while pos < len(heap):
+        left = pos * 2 + 1
+        right = pos * 2 + 2
+        if right < len(heap):
+            max_child = left if heap[left] > heap[right] else right
+        elif left < len(heap):
+            max_child = left
+        else:
+            return
 
-    if heap[pos] < heap[max_child]:
-        heap[pos], heap[max_child] = heap[max_child], heap[pos]
+        if heap[pos] < heap[max_child]:
+            heap[pos], heap[max_child] = heap[max_child], heap[pos]
 
-    sift_down(heap, max_child)
+        pos = max_child
 
 
 def insert(heap: List, number: int):
@@ -36,8 +37,7 @@ def insert(heap: List, number: int):
 
 
 def heapify(array: List):
-
-    for idx in reversed(range(len(array))):
+    for idx in range(len(array), 1, -1):
         sift_down(array, idx)
 
 
