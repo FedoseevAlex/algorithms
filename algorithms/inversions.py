@@ -1,5 +1,4 @@
 from typing import List
-from itertools import zip_longest
 
 
 def merge_sort(array: List[int]) -> List[int]:
@@ -12,20 +11,6 @@ def merge_sort(array: List[int]) -> List[int]:
         return [min(array), max(array)]
     else:
         return array
-
-
-def merge_sort_iterative(array: List[int]) -> List[int]:
-    queue = [[elem] for elem in array]
-    counter = 0
-
-    while len(queue) > 1:
-        first, second, *queue = queue
-        merged = merge(first, second)
-        queue.append(merged)
-        counter += 1
-    print("total merges", counter)
-
-    return queue[0]
 
 
 def merge(first: List[int], second: List[int]) -> List[int]:
@@ -42,10 +27,11 @@ def merge(first: List[int], second: List[int]) -> List[int]:
             result.extend(first)
             first.clear()
         elif first[0] < second[0]:
-            result.append(first[0])
-            first = first[1:]
+            result.append(first.pop(0))
         else:
-            result.append(second[0])
-            second = second[1:]
+            result.append(second.pop(0))
 
     return result
+
+def get_inversions(array):
+    pass
