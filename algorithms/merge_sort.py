@@ -3,13 +3,11 @@ from itertools import zip_longest
 
 
 def merge_sort(array: List[int]) -> List[int]:
-    if len(array) > 2:
+    if len(array) >= 2:
         mid = len(array) // 2
         left = merge_sort(array[:mid])
         right = merge_sort(array[mid:])
         return merge(left, right)
-    elif len(array) == 2:
-        return [min(array), max(array)]
     else:
         return array
 
