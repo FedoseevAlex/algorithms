@@ -20,8 +20,8 @@ def quick_sort(array, start=0, end=None):
 
 
 def partition(array, start, end):
-    # random_index = randint(start + 1, end)
-    # array[start], array[random_index] = array[random_index], array[start]
+    random_index = randint(start + 1, end)
+    array[start], array[random_index] = array[random_index], array[start]
 
     pivot = array[start]
     left = start
