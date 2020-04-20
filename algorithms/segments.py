@@ -1,42 +1,64 @@
+"""
+https://stackoverflow.com/questions/36972714/implementing-3-way-quicksort
+"""
+from operator import itemgetter
+import bisect
+from typing import List
 from random import randint
 
 
-def quick_sort(array, start=None, end=None):
-    if start is None:
-        start = 0
-
+def quick_sort(array, start=0, end=None):
     if end is None:
         end = len(array) - 1
 
     if start >= end:
         return
 
-    separator = partition(array, start, end)
-    quick_sort(array, start, separator - 1)
-    quick_sort(array, separator + 1, end)
+    left, right = partition(array, start, end)
+    quick_sort(array, start, left)
+    quick_sort(array, right, end)
 
 
 def partition(array, start, end):
-    rand_index = randint(start + 1, end)
-    array[start], array[rand_index] = array[rand_index], array[start]
+    # random_index = randint(start + 1, end)
+    # array[start], array[random_index] = array[random_index], array[start]
 
-    pivot = start
-    separator = start
-    right = start
+    pivot = array[start]
+    left = start
+    right = end
+    i = start
 
-    while right < end:
-        right += 1
-        if array[right] > array[pivot]:
-            continue
-        separator += 1
-        array[right], array[separator] = array[separator], array[right]
-    array[separator], array[pivot] = array[pivot], array[separator]
-    return separator
+    while i <= right:
+        if array[i] > pivot:
+            array[i], array[right] = array[right], array[i]
+            right -= 1
+            i -= 1
+        elif array[i] < pivot:
+            array[left], array[i] = array[i], array[left]
+            left += 1
+        i += 1
+    return left - 1, right + 1
 
 
-if __name__ == '__main__':
+def segments(segs: List, points: List[int]):
+    results = list()
+    starts = list(map(itemgetter(0), segs))
+    ends = list(map(itemgetter(1), segs))
+    quick_sort(starts)
+    quick_sort(ends)
+
+    for point in points:
+        left = bisect.bisect_right(starts, point)
+        right = bisect.bisect_left(ends, point)
+        results.append(abs(left - right))
+    return results
+
+
+if __name__ == "__main__":
     segment_num, _ = map(int, input().split())
-    segments = list()
-    for idx in segment_num:
-        segments.append(tuple(map(int, input().split())))
+    segs = list()
+    for _ in range(segment_num):
+        segs.append(tuple(map(int, input().split())))
     points = list(map(int, input().split()))
+
+    print(*segments(segs, points))
