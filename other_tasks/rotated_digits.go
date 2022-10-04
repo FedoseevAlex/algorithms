@@ -41,26 +41,15 @@ func main() {
 }
 
 func checkNumber(number int) bool {
-	goodNumbers := map[int]struct{}{
-		2: struct{}{},
-		5: struct{}{},
-		6: struct{}{},
-		9: struct{}{},
-	}
-	neutralNumbers := map[int]struct{}{
-		0: struct{}{},
-		1: struct{}{},
-		8: struct{}{},
-	}
 	score := 0
 	for div, mod := number/10, number%10; div != 0 || mod != 0; div, mod = div/10, div%10 {
-		if _, ok := goodNumbers[mod]; ok {
-			score += 1
-		} else if _, ok := neutralNumbers[mod]; !ok {
-			return false
-		}
-	}
-
+    switch mod{
+    case 3,4,7:
+      return false
+    case 2,5,6,9:
+      score += 1
+    }
+  }
 	return score > 0
 }
 
