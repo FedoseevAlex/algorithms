@@ -44,20 +44,14 @@ class Solution:
         return sum(candies)
         
     def traverse(self, ratings: list[int], candies: list[int]):
-        for idx in range(len(ratings)):
-            forward_idx = idx+1 if idx < len(ratings) - 1 else None
+        for idx in range(len(ratings) - 1):
+            if ratings[idx] > ratings[idx+1] and candies[idx] <= candies[idx+1]:
+                candies[idx] = max(candies[idx], candies[idx+1]) + 1
+        
+            if ratings[idx] < ratings[idx+1] and candies[idx] >= candies[idx+1]:
+                candies[idx+1] = max(candies[idx], candies[idx+1]) + 1
 
-            curr = ratings[idx]
-            forward = ratings[forward_idx] if forward_idx is not None else -float("inf")
-
-            candies[idx] = candies[idx]
-            forward_c = candies[forward_idx] if forward_idx is not None else -float("inf")
-
-            if curr > forward and candies[idx] <= forward_c and forward_idx is not None:
-                candies[idx] = max(candies[idx], candies[forward_idx]) + 1
-
-            if curr < forward and candies[idx] >= forward_c and forward_idx is not None:
-                candies[forward_idx] += (candies[idx] - candies[forward_idx]) + 1
+            print(f"{ratings=} {candies=}")
 
 
 if __name__ == "__main__":
